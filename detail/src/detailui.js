@@ -16,7 +16,7 @@ export default class DetailUI extends Plugin {
 
       // Create the toolbar button.
       buttonView.set({
-        label: Drupal.t('Add details'),
+        label: 'Add details',
         withText: true,
         tooltip: true,
       });

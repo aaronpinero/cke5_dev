@@ -13,13 +13,14 @@ import { List } from '@ckeditor/ckeditor5-list';
 import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 
 import SimpleBox from './simplebox/simplebox';
+import Detail from './detail/src/detail';
 
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 
 ClassicEditor
   .create( document.querySelector( '#editor' ), {
-    plugins: [ Alignment, Essentials, Paragraph, Bold, Italic, Heading, Indent, Link, List, Table, TableToolbar, SimpleBox ],
-    toolbar: [ 'alignment', 'heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'insertTable' ],
+    plugins: [ Alignment, Essentials, Paragraph, Bold, Italic, Heading, Indent, Link, List, Table, TableToolbar, SimpleBox, Detail ],
+    toolbar: [ 'alignment', 'heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'insertTable', 'detail', 'simpleBox' ],
     table: {
       contentToolbar: [
         'tableColumn',

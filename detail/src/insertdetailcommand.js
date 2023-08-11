@@ -52,7 +52,7 @@ function createDetail(writer, editor) {
   writer.appendElement('paragraph', detailWrapper);
 
   // Add a default title in the summary.
-  writer.appendText(Drupal.t('Details'), detailSummary);
+  writer.appendText('Details', detailSummary);
 
   // Return the element to be added to the editor.
   return detail;
