@@ -59,6 +59,7 @@ export default class DetailEditing extends Plugin {
       isObject: true,
       // Allow in places where other blocks are allowed (e.g. directly in the root).
       allowWhere: '$block',
+      allowAttributes: 'open',
     });
 
     schema.register('detailSummary', {
@@ -95,9 +96,17 @@ export default class DetailEditing extends Plugin {
     // processed by CKEditor, then CKEditor recognizes and loads it as a
     // <detail> model.
     conversion.for('upcast').elementToElement({
-      model: 'detail',
       view: {
         name: 'details',
+        attributes: [ 'open' ]
+      },
+      model: ( viewElement, { writer: modelWriter } ) => {
+        const openAttribute = viewElement.getAttribute('open');
+        let attributes = {};
+        if (openAttribute !== undefined) {
+          attributes = { open: true };
+        }
+        return modelWriter.createElement( 'detail', attributes );
       },
     });
 
@@ -131,9 +140,7 @@ export default class DetailEditing extends Plugin {
     // <details>{{inner content}}</details>.
     conversion.for('dataDowncast').elementToElement({
       model: 'detail',
-      view: {
-        name: 'details',
-      },
+      view: ( modelElement, { writer: viewWriter } ) => createDetailsView( modelElement, viewWriter ),
     });
 
     // Instances of <detailSummary> are saved as
@@ -164,8 +171,7 @@ export default class DetailEditing extends Plugin {
     conversion.for('editingDowncast').elementToElement({
       model: 'detail',
       view: (modelElement, { writer: viewWriter }) => {
-        const details = viewWriter.createContainerElement('details');
-
+        const details = createDetailsView( modelElement, viewWriter );
         return toWidget(details, viewWriter, { label: 'detail widget' });
       },
     });
@@ -189,6 +195,17 @@ export default class DetailEditing extends Plugin {
         return toWidgetEditable(div, viewWriter);
       },
     });
+    
+    // Helper method for both downcast converters.
+    function createDetailsView( modelElement, viewWriter ) {
+      const openAttribute = modelElement.getAttribute( 'open' );
+      let attributes = {};
+      if (openAttribute !== undefined) {
+        attributes = { open: 'open' };
+      }
+      const detailsView = viewWriter.createContainerElement( 'details', attributes );
+      return detailsView;
+    }
   }
 
   /**
