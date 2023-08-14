@@ -250,5 +250,10 @@ export default class DetailEditing extends Plugin {
         data.preventDefault();
       }
     });
+    
+    // this.listenTo(viewDocument, 'click', (evt, data) => {
+    //   const isDetails = data.domTarget.tagName.toLowerCase() === 'details';
+    //   console.log(isDetails);
+    // })
   }
 }
