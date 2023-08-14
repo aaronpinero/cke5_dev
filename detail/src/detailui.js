@@ -51,6 +51,26 @@ export default class DetailUI extends Plugin {
       isOn: false
     } );
     switchButton.on( 'execute', () => { switchButton.isOn = !switchButton.isOn } );
+    
+    this.listenTo( switchButton, 'change:isOn', () => {
+      const selection = this.editor.editing.view.document.selection.getSelectedElement();
+      if (selection) {
+        const modelElement = this.editor.editing.mapper.toModelElement(selection);
+        if (modelElement) {
+          if (switchButton.isOn) {
+            this.editor.model.change( writer => {
+              writer.setAttribute('open', 'true', modelElement);
+            } );
+          }
+          else {
+            this.editor.model.change( writer => {
+              writer.removeAttribute('open', modelElement);
+            } );
+          }
+        }
+      }
+    } );
+    
     return switchButton;
   }
   
@@ -59,29 +79,29 @@ export default class DetailUI extends Plugin {
     console.log(view.document.selection);
     let target = null;
     target = () => view.domConverter.mapViewToDom(
-      this._getClosestSelectedWidget(view.document.selection)
+      this._getTargetDetailsWidget(view.document.selection)
     );  
     return {
       target
     };
   }
   
-  _getClosestSelectedWidget(selection) {
+  _getTargetDetailsWidget(selection) {
     const selectionPosition = selection.getFirstPosition();
     if (!selectionPosition) {
       return null;
     }
     const viewElement = selection.getSelectedElement();
-    if (viewElement && isWidget(viewElement)) {
+    if (viewElement && isWidget(viewElement) && viewElement.name == 'details') {
       return viewElement;
     }
-    let parent = selectionPosition.parent;
-    while (parent) {
-      if (parent.is('element') && this.isWidget(parent)) {
-        return parent;
-      }
-      parent = parent.parent;
-    }
+    // let parent = selectionPosition.parent;
+    // while (parent) {
+    //   if (parent.is('element') && isWidget(parent) && parent.name == 'details') {
+    //     return parent;
+    //   }
+    //   parent = parent.parent;
+    // }
     return null;
   }
   
@@ -95,12 +115,12 @@ export default class DetailUI extends Plugin {
   _enableBalloonActivators() {
     const editor = this.editor;
     const viewDocument = editor.editing.view.document;
-    // Handle click on view document and show panel when selection is placed inside the link element.
-    // Keep panel open until selection will be inside the same link element.
+    
+    // Handle click on view document and show balloon when
+    // the selection is a details widget.
     this.listenTo(viewDocument, 'click', () => {
-        const widget = this._getClosestSelectedWidget(viewDocument.selection);
+        const widget = this._getTargetDetailsWidget(viewDocument.selection);
         if (widget) {
-          // Then show panel but keep focus inside editor editable.
           this._showUI();
         }
     });
