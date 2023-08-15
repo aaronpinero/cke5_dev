@@ -139,7 +139,10 @@ export default class DetailEditing extends Plugin {
     // Instances of <detail> are saved as
     // <details>{{inner content}}</details>.
     conversion.for('dataDowncast').elementToElement({
-      model: 'detail',
+      model: {
+        name: 'detail',
+        attributes: [ 'open' ]
+      },
       view: ( modelElement, { writer: viewWriter } ) => createDetailsView( modelElement, viewWriter ),
     });
 
@@ -169,7 +172,10 @@ export default class DetailEditing extends Plugin {
     //
     // Convert the <detail> model into a container widget in the editor UI.
     conversion.for('editingDowncast').elementToElement({
-      model: 'detail',
+      model: {
+        name: 'detail',
+        attributes: [ 'open' ]
+      },
       view: (modelElement, { writer: viewWriter }) => {
         const details = createDetailsView( modelElement, viewWriter );
         return toWidget(details, viewWriter, { label: 'detail widget' });

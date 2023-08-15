@@ -3,7 +3,7 @@
  */
 
 import { Plugin } from '@ckeditor/ckeditor5-core';
-import { ButtonView, SwitchButtonView, ContextualBalloon } from '@ckeditor/ckeditor5-ui';
+import { ButtonView, SwitchButtonView, ContextualBalloon, clickOutsideHandler } from '@ckeditor/ckeditor5-ui';
 import { isWidget } from 'ckeditor5/src/widget';
 
 export default class DetailUI extends Plugin {
@@ -48,7 +48,6 @@ export default class DetailUI extends Plugin {
     switchButton.set( {
       label: 'Open by default',
       withText: true,
-      isOn: false
     } );
     switchButton.on( 'execute', () => { switchButton.isOn = !switchButton.isOn } );
     
@@ -71,12 +70,24 @@ export default class DetailUI extends Plugin {
       }
     } );
     
+    // Hide the form view when clicking outside the balloon.
+    clickOutsideHandler( {
+      emitter: switchButton,
+      activator: () => this._balloon.visibleView === switchButton,
+      contextElements: [ this._balloon.view.element ],
+      callback: () => this._hideUI()
+    } );
+    
     return switchButton;
+  }
+  
+  _hideUI() {
+    this._balloon.remove( this.switchButton );
+    this.editor.editing.view.focus();
   }
   
   _getBalloonPositionData() {
     const view = this.editor.editing.view;
-    console.log(view.document.selection);
     let target = null;
     target = () => view.domConverter.mapViewToDom(
       this._getTargetDetailsWidget(view.document.selection)
@@ -110,6 +121,18 @@ export default class DetailUI extends Plugin {
       view: this.switchButton,
       position: this._getBalloonPositionData()
     } );
+    const selection = this.editor.editing.view.document.selection.getSelectedElement();
+    if (selection) {
+      const modelElement = this.editor.editing.mapper.toModelElement(selection);
+      if (modelElement) {
+        if (modelElement.getAttribute('open') !== undefined) {
+          this.switchButton.set('isOn', true);
+        }
+        else {
+          this.switchButton.set('isOn', false);
+        }
+      }
+    }
   }
   
   _enableBalloonActivators() {
