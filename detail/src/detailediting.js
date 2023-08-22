@@ -98,7 +98,6 @@ export default class DetailEditing extends Plugin {
     conversion.for('upcast').elementToElement({
       view: {
         name: 'details',
-        attributes: [ 'open' ]
       },
       model: ( viewElement, { writer: modelWriter } ) => {
         const openAttribute = viewElement.getAttribute('open');
