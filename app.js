@@ -14,13 +14,14 @@ import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 
 import SimpleBox from './simplebox/simplebox';
 import Detail from './detail/src/detail';
+import TableOfContents from './toc/src/toc';
 
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 
 ClassicEditor
   .create( document.querySelector( '#editor' ), {
-    plugins: [ Alignment, Essentials, Paragraph, Bold, Italic, Heading, Indent, Link, List, Table, TableToolbar, SimpleBox, Detail ],
-    toolbar: [ 'alignment', 'heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'insertTable', 'detail', 'simpleBox' ],
+    plugins: [ Alignment, Essentials, Paragraph, Bold, Italic, Heading, Indent, Link, List, Table, TableToolbar, SimpleBox, Detail, TableOfContents ],
+    toolbar: [ 'alignment', 'heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'insertTable', 'detail', 'simpleBox', 'toc' ],
     table: {
       contentToolbar: [
         'tableColumn',
