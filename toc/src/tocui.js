@@ -1,3 +1,4 @@
+import { ButtonView } from '@ckeditor/ckeditor5-ui';
 import { Plugin } from '@ckeditor/ckeditor5-core';
 
 export default class TableOfContentsUI extends Plugin {
